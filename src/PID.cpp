@@ -69,7 +69,10 @@ void PID::update(double input) {
     
     //对于D，同上述I的分析，用曲线割线近似曲线切线，公式为error_curt/jump_time
     D = kd * (error_curt - error_prev)/ jump_time;
-     
+    
+    //更新error_curt
+    error_prev=error_curt;
+
     if (abs(error_curt) <= error_tol) {  // Exit when staying in tolerated region and
                                         // maintaining a low enough speed
         arrived = true;
@@ -92,6 +95,9 @@ void PosPID::update(Point input) {
         I = sign(I)*I_max;
     D = kd * (error_curt - error_prev)/ jump_time;
 
+    //更新error_curt
+    error_prev=error_curt;
+    
     if (abs(error_curt) <= error_tol) {  // Exit when staying in tolerated region and
                                         // maintaining a low enough speed
         arrived = true;
@@ -110,6 +116,9 @@ void DirPID::update(double input) {
     if (abs(I) > I_max)
         I = sign(I)*I_max;
     D = kd * (error_curt - error_prev)/ jump_time;
+    
+    //更新error_curt
+    error_prev=error_curt;
     
     if (abs(error_curt) <= error_tol) {  // Exit when staying in tolerated region and
                                         // maintaining a low enough speed
