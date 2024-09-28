@@ -30,7 +30,7 @@ using namespace std;
  * 
  */
 
-PID::PID() : first_time(true), arrived(false), I_max(20), I_range(50), jump_time(50), D_tol(10) { my_timer.reset(); }
+PID::PID() : first_time(true), arrived(false), I_max(20), I_range(50), jump_time(50), D_tol(10){ my_timer.reset(); }
 
 void PID::setFirstTime() { first_time = true; }
 
@@ -53,6 +53,9 @@ void PID::update(double input) {
     error_curt = target - input;  // calculate current error
     //TODO: calculate the contribution of P, I, D with kp, ki, kd
     
+    //因为个人对于多线程下的时间操作没有充足把握，因此该程序中对于时间的部分可能不正确
+    jump_time=my_timer.getTime();
+
     //对于P，计算方式为目标值与当前值之差乘以kp
     P = kp*error_curt;
 
@@ -70,8 +73,10 @@ void PID::update(double input) {
     //对于D，同上述I的分析，用曲线割线近似曲线切线，公式为error_curt/jump_time
     D = kd * (error_curt - error_prev)/ jump_time;
     
-    //更新error_curt
+
+    //更新error_curt以及时间
     error_prev=error_curt;
+    my_timer.reset();
 
     if (abs(error_curt) <= error_tol) {  // Exit when staying in tolerated region and
                                         // maintaining a low enough speed
@@ -119,7 +124,7 @@ void DirPID::update(double input) {
     
     //更新error_curt
     error_prev=error_curt;
-    
+
     if (abs(error_curt) <= error_tol) {  // Exit when staying in tolerated region and
                                         // maintaining a low enough speed
         arrived = true;
