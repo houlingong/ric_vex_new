@@ -93,6 +93,7 @@ void PosPID::update(Point input) {
     //TODO: calculate the contribution of P, I, D with kp, ki, kd
     
     //PID的数学公式及实现思路见函数update，在此不再赘述
+    jump_time=my_timer.getTime();
     P = kp*error_curt;
     if (abs(P) < I_range)
         I += ki * error_curt * jump_time;
@@ -100,8 +101,8 @@ void PosPID::update(Point input) {
         I = sign(I)*I_max;
     D = kd * (error_curt - error_prev)/ jump_time;
 
-    //更新error_curt
     error_prev=error_curt;
+    my_timer.reset();
     
     if (abs(error_curt) <= error_tol) {  // Exit when staying in tolerated region and
                                         // maintaining a low enough speed
@@ -115,6 +116,7 @@ void DirPID::update(double input) {
     //TODO: calculate the contribution of P, I, D with kp, ki, kd
 
     //PID的数学公式及实现思路见函数update，在此不再赘述
+    jump_time=my_timer.getTime();
     P = kp*error_curt;
     if (abs(P) < I_range)
         I += ki * error_curt * jump_time;
@@ -122,8 +124,8 @@ void DirPID::update(double input) {
         I = sign(I)*I_max;
     D = kd * (error_curt - error_prev)/ jump_time;
     
-    //更新error_curt
     error_prev=error_curt;
+    my_timer.reset();
 
     if (abs(error_curt) <= error_tol) {  // Exit when staying in tolerated region and
                                         // maintaining a low enough speed
