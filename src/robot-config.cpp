@@ -31,4 +31,4 @@ analog_in AS5600_R = analog_in(Brain.ThreeWirePort.H);
 
 // 定义面试要求的电机，端口号为21，默认为正转
 // 按键响应见usercontrol
-motor motor_base_interview = motor(PORT21, ratio6_1, false)
+motor motor_base_interview = motor(PORT21, ratio6_1, false);
