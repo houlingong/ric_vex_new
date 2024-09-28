@@ -63,12 +63,12 @@ void PID::update(double input) {
     //个人认为上述条件有误；第一个条件：IMAX自然是非负数（其他文件如auto_functions可以证明这一点）
     //第二个条件：应当改为当P的绝对值小于IRange时
     if (abs(P) < I_range)
-        I += error_curt * jump_time;
+        I += ki * error_curt * jump_time;
     if (abs(I) > I_max)
         I = sign(I)*I_max;
     
     //对于D，同上述I的分析，用曲线割线近似曲线切线，公式为error_curt/jump_time
-    D = error_curt / jump_time;
+    D = kd * error_curt / jump_time;
      
     if (abs(error_curt) <= error_tol) {  // Exit when staying in tolerated region and
                                         // maintaining a low enough speed
@@ -87,10 +87,10 @@ void PosPID::update(Point input) {
     //PID的数学公式及实现思路见函数update，在此不再赘述
     P = kp*error_curt;
     if (abs(P) < I_range)
-        I += error_curt * jump_time;
+        I += ki * error_curt * jump_time;
     if (abs(I) > I_max)
         I = sign(I)*I_max;
-    D = error_curt / jump_time;
+    D = kd * error_curt / jump_time;
 
     if (abs(error_curt) <= error_tol) {  // Exit when staying in tolerated region and
                                         // maintaining a low enough speed
@@ -106,10 +106,10 @@ void DirPID::update(double input) {
     //PID的数学公式及实现思路见函数update，在此不再赘述
     P = kp*error_curt;
     if (abs(P) < I_range)
-        I += error_curt * jump_time;
+        I += ki * error_curt * jump_time;
     if (abs(I) > I_max)
         I = sign(I)*I_max;
-    D = error_curt / jump_time;
+    D = kd * error_curt / jump_time;
     
     if (abs(error_curt) <= error_tol) {  // Exit when staying in tolerated region and
                                         // maintaining a low enough speed
